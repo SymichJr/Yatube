@@ -1,7 +1,13 @@
 # flake 8 ругается на import *, прописал каждый иморт отдельно
 from django.contrib.auth.views import (
-    LoginView, LogoutView, PasswordChangeDoneView, PasswordChangeView, PasswordResetCompleteView,
-    PasswordResetConfirmView, PasswordResetDoneView, PasswordResetView,
+    LoginView,
+    LogoutView,
+    PasswordChangeDoneView,
+    PasswordChangeView,
+    PasswordResetCompleteView,
+    PasswordResetConfirmView,
+    PasswordResetDoneView,
+    PasswordResetView,
 )
 from django.urls import path
 
