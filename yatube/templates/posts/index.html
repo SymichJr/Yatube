@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}
+  Главная
+{% endblock %}
+{% block  content %}  
+  {% include 'includes/switcher.html' %} 
+  <h1>Последние публикации</h1>
+  {% include 'includes/publication.html' %} 
+  {% include 'includes/paginator.html' %}
+{% endblock %}
