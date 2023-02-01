@@ -42,10 +42,10 @@ def profile(request, username):
     all_author_posts = author.posts.all()
     posts_count = all_author_posts.count()
     page_obj = page_num(request, all_author_posts)
-    if request.user.is_authenticated:
-        following = Follow.objects.filter(user=request.user, author=author)
-    else:
-        following = False
+    following = (
+        request.user.is_authenticated
+        and Follow.objects.filter(user=request.user, author=author).exists()
+    )
     context = {
         "author": author,
         "page_obj": page_obj,
@@ -96,7 +96,6 @@ def post_edit(request, post_id):
     )
     if request.POST and form.is_valid():
         post = form.save()
-        post.save()
         return redirect("posts:post_detail", post.id)
     form = PostForm(instance=post)
     return render(

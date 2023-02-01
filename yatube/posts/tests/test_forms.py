@@ -7,8 +7,8 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import Client, TestCase, override_settings
 from django.urls import reverse
 
-from posts.forms import PostForm
-from posts.models import Group, Post
+from posts.forms import PostForm,
+from posts.models import Group, Post, Comment
 
 User = get_user_model()
 TEMP_MEDIA_ROOT = tempfile.mkdtemp(dir=settings.BASE_DIR)
@@ -39,6 +39,7 @@ class PostFormsTests(TestCase):
 
     def setUp(self):
         super().setUp()
+        self.guest = Client()
         self.authorized_user = Client()
         self.authorized_user.force_login(PostFormsTests.user)
 
@@ -99,3 +100,35 @@ class PostFormsTests(TestCase):
         self.assertRedirects(
             response, reverse("posts:post_detail", args=(self.post.pk,))
         )
+
+    def test_comment_authorized(self):
+        """Проверка создания коментария
+        авторизированным пользователем."""
+        form_data = {"text": "Test comment"}
+        self.authorized_user.post(
+            reverse(
+                "posts:add_comment",
+                kwargs={
+                    "post_id": self.post.pk,
+                },
+            ),
+            data=form_data,
+            follow=True,
+        )
+        self.assertTrue(Comment.objects.filter(text="Test comment").exists())
+
+    def test_comment_guest(self):
+        """Проверка создания коментария
+        неавторизированным пользователем."""
+        form_data = {"text": "Test comment"}
+        self.guest.post(
+            reverse(
+                "posts:add_comment",
+                kwargs={
+                    "post_id": self.post.pk,
+                },
+            ),
+            data=form_data,
+            follow=True,
+        )
+        self.assertFalse(Comment.objects.filter(text="Test comment").exists())

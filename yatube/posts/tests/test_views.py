@@ -217,10 +217,8 @@ class PostsPagesTest(TestCase):
 
     def test_post_index_cache(self):
         """Проверка кеша."""
-        Post.objects.all().delete
         response_1 = self.authorized_client.get(reverse("posts:index"))
-        Post.objects.all().delete
-        time.sleep(20)
+        cache.clear()
         response_2 = self.authorized_client.get(reverse("posts:index"))
         self.assertEqual(response_1.content, response_2.content)
         response_3 = self.authorized_client.get(reverse("posts:index"))
