@@ -216,12 +216,10 @@ class PostsPagesTest(TestCase):
 
     def test_post_index_cache(self):
         """Проверка кеша."""
-        response_1 = self.authorized_client.get(reverse("posts:index"))
-        cache.clear()
-        response_2 = self.authorized_client.get(reverse("posts:index"))
+        response_1 = self.authorized_client.get(reverse('posts:index'))
+        self.post.delete()
+        response_2 = self.authorized_client.get(reverse('posts:index'))
         self.assertEqual(response_1.content, response_2.content)
-        response_3 = self.authorized_client.get(reverse("posts:index"))
-        self.assertEqual(response_1.content, response_3.content)
 
     def test_authorized_user_follow(self):
         """Авторизованный пользователь может подписываться
