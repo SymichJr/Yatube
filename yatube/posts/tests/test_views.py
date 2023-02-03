@@ -220,6 +220,9 @@ class PostsPagesTest(TestCase):
         self.post.delete()
         response_2 = self.authorized_client.get(reverse('posts:index'))
         self.assertEqual(response_1.content, response_2.content)
+        cache.clear()
+        response_3 = self.authorized_client.get(reverse('posts:index'))
+        self.assertNotEqual(response_1.content, response_3.content)
 
     def test_authorized_user_follow(self):
         """Авторизованный пользователь может подписываться
